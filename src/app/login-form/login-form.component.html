@@ -1,0 +1,41 @@
+<form #myForm="ngForm" (ngSubmit)="login(myForm)">
+  <h2>Inicio de Sesión</h2>
+  <div class="form-fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Correo electrónico</mat-label>
+      <input 
+        matInput
+        [formControl]="email"
+        (blur)="updateEmailErrorMessage()"
+        required>
+        @if (email.invalid) {
+          <mat-error>{{emailErrorMessage()}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input 
+        matInput 
+        [type]="hide() ? 'password' : 'text'"
+        [formControl]="password"
+        (blur)="updatePasswordErrorMessage()"
+        required />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="clickEvent($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()"
+      >
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      @if (password.invalid) {
+        <mat-error>{{passwordErrorMessage()}}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+  <div class="form-buttons">
+    <button mat-raised-button type="submit">Aceptar</button>
+    <button mat-raised-button type="reset" (click)="cancel(myForm)">Cancelar</button>
+  </div>
+</form>

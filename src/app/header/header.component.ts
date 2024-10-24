@@ -7,7 +7,7 @@ import { UserService } from '../users/user.service';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
-  constructor(private myService: UserService) {}
+  constructor(public myService: UserService) {}
 
   title = 'Clínica San José';
   isUserLogedIn = false;

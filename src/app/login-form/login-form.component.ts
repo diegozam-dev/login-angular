@@ -23,7 +23,7 @@ export class LoginFormComponent {
   emailErrorMessage = signal('');
   passwordErrorMessage = signal('');
 
-  constructor(private myService: UserService) {
+  constructor(public myService: UserService) {
     merge(this.email.statusChanges, this.email.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
@@ -39,20 +39,11 @@ export class LoginFormComponent {
       });
   }
 
-  // ngOnInit(): void {
-  //   this.myService.$logedIn.subscribe((data) => {
-  //     this.isUserCorrect = data;
-
-  //     if (data) this.title = this.myService.email;
-  //     else this.title = 'Clínica San José';
-  //   });
-  // }
-
   updateEmailErrorMessage() {
     if (this.email.hasError('required')) {
       this.emailErrorMessage.set('Ingresa un email.');
     } else if (this.email.hasError('email')) {
-      this.emailErrorMessage.set('Not a valid email');
+      this.emailErrorMessage.set('Email no valido.');
     } else {
       this.emailErrorMessage.set('');
     }
@@ -73,6 +64,7 @@ export class LoginFormComponent {
   }
 
   clickEvent(event: MouseEvent) {
+    event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
   }

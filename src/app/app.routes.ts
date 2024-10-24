@@ -1,3 +1,8 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginFormComponent } from './login-form/login-form.component';
 
-export const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: LoginFormComponent, pathMatch: 'full' },
+];
+
+export const routing = RouterModule.forRoot(routes);

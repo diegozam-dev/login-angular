@@ -1,4 +1,8 @@
 <mat-toolbar>
   <span>{{title}}</span>
-  <button mat-raised-button>Acerca de</button>
+  @if (isUserLogedIn) {
+    <button mat-raised-button (click)="myService.signOut()">Cerrar Sesión</button>
+  } @else {
+    <button mat-raised-button (click)="conoceMas()">Acerca de</button>
+  }
 </mat-toolbar>

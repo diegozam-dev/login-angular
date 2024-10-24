@@ -1,7 +1,13 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  OnInit,
+} from '@angular/core';
 import { FormControl, NgForm, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
+import { UserService } from '../users/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -17,7 +23,7 @@ export class LoginFormComponent {
   emailErrorMessage = signal('');
   passwordErrorMessage = signal('');
 
-  constructor() {
+  constructor(private myService: UserService) {
     merge(this.email.statusChanges, this.email.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
@@ -32,6 +38,15 @@ export class LoginFormComponent {
         this.updateFormCompleted();
       });
   }
+
+  // ngOnInit(): void {
+  //   this.myService.$logedIn.subscribe((data) => {
+  //     this.isUserCorrect = data;
+
+  //     if (data) this.title = this.myService.email;
+  //     else this.title = 'Clínica San José';
+  //   });
+  // }
 
   updateEmailErrorMessage() {
     if (this.email.hasError('required')) {
@@ -67,13 +82,21 @@ export class LoginFormComponent {
     this.updatePasswordErrorMessage();
     this.updateFormCompleted();
 
-    if (this.formCompleted()) {
-      alert('Ha presionado el botón aceptar.');
+    if (
+      this.formCompleted() &&
+      this.myService.isUserCorrect(
+        this.email.value as string,
+        this.password.value as string
+      )
+    ) {
+      this.myService.login();
 
       this.email.reset();
       this.password.reset();
       this.formCompleted.set(false);
       form.resetForm();
+    } else {
+      alert('Credenciales incorrectas');
     }
   }
 

@@ -1,9 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  signal,
-  OnInit,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, NgForm, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
@@ -18,6 +13,7 @@ import { UserService } from '../users/user.service';
 export class LoginFormComponent {
   readonly email = new FormControl('', [Validators.required, Validators.email]);
   readonly password = new FormControl('', [Validators.required]);
+
   hide = signal(true);
   formCompleted = signal(false);
   emailErrorMessage = signal('');
@@ -37,6 +33,12 @@ export class LoginFormComponent {
         this.updatePasswordErrorMessage();
         this.updateFormCompleted();
       });
+  }
+
+  clickEvent(event: MouseEvent) {
+    event.preventDefault();
+    this.hide.set(!this.hide());
+    event.stopPropagation();
   }
 
   updateEmailErrorMessage() {
@@ -63,32 +65,27 @@ export class LoginFormComponent {
     this.formCompleted.set(isEmailValid && isPasswordValid);
   }
 
-  clickEvent(event: MouseEvent) {
-    event.preventDefault();
-    this.hide.set(!this.hide());
-    event.stopPropagation();
-  }
-
   login(form: NgForm) {
     this.updateEmailErrorMessage();
     this.updatePasswordErrorMessage();
     this.updateFormCompleted();
 
-    if (
-      this.formCompleted() &&
-      this.myService.isUserCorrect(
-        this.email.value as string,
-        this.password.value as string
-      )
-    ) {
-      this.myService.login();
+    if (this.formCompleted()) {
+      if (
+        this.myService.isUserCorrect(
+          this.email.value as string,
+          this.password.value as string
+        )
+      ) {
+        this.myService.login();
 
-      this.email.reset();
-      this.password.reset();
-      this.formCompleted.set(false);
-      form.resetForm();
-    } else {
-      alert('Credenciales incorrectas');
+        this.email.reset();
+        this.password.reset();
+        this.formCompleted.set(false);
+        form.resetForm();
+      } else {
+        alert('Credenciales incorrectas');
+      }
     }
   }
 

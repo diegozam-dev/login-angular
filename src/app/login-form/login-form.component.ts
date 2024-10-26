@@ -58,6 +58,7 @@ export class LoginFormComponent {
   }
 
   clickEvent(event: MouseEvent) {
+    event.preventDefault();
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
